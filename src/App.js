@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   addShop,
   getAllShops,
-  setLocalStorage,
   shopsDataCount,
 } from './features/shop/shopSlice';
 import {
