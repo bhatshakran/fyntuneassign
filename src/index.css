@@ -1,13 +1,39 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+
+    /* @apply bg-gray-500; */
+  }
+
+  @media only screen and (min-width: 768px) {
+    .shoplist {
+      height: 450px !important;
+    }
+
+    ::-webkit-scrollbar {
+      /* -webkit-appearance: none; */
+      width: 5px;
+      height: 5px !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+      height: 5px !important;
+
+      @apply bg-blue-900;
+    }
+  }
 }

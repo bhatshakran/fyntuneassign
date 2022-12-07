@@ -5,9 +5,12 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { setLocalStorage } from './features/shop/shopSlice';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
+
+store.dispatch(setLocalStorage());
 
 root.render(
   <React.StrictMode>
