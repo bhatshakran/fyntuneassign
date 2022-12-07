@@ -26,8 +26,8 @@ export const ShopCard = ({ data, deleteShopCb }) => {
   const { name, area, category, _id, openingDate, closingDate } = data;
 
   const deleteShopFromStore = () => {
-    deleteShopCb();
     dispatch(deleteShop(_id));
+    deleteShopCb();
   };
 
   return (

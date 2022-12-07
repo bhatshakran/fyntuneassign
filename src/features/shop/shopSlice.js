@@ -74,10 +74,11 @@ export const shopSlice = createSlice({
       return state;
     },
 
-    getAllShops: () => {
-      return localStorage.getItem('shops')
+    getAllShops: (state) => {
+      /* localStorage.getItem('shops')
         ? JSON.parse(localStorage.getItem('shops'))
-        : 'No shops available. Add some shops';
+        : 'No shops available. Add some shops'; */
+      state.shops = JSON.parse(localStorage.getItem('shops'));
     },
     addShop: (state, action) => {
       let shopsFromStorage = JSON.parse(localStorage.getItem('shops'));

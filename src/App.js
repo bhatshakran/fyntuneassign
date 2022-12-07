@@ -3,7 +3,12 @@ import logo from './imgs/logo.png';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addShop, shopsDataCount } from './features/shop/shopSlice';
+import {
+  addShop,
+  getAllShops,
+  setLocalStorage,
+  shopsDataCount,
+} from './features/shop/shopSlice';
 import {
   AREAS,
   BTNCLASS,
@@ -27,7 +32,7 @@ function App() {
   const [zeroResultsFromFilters, setZeroResultsFromFilters] =
     React.useState(true);
 
-  const [filteredData, setFilteredData] = React.useState();
+  const filteredData = React.useRef();
   const rerenderRef = React.useRef(true);
 
   const nameRef = React.useRef('');
@@ -93,7 +98,7 @@ function App() {
     if (Object.values(errors).some((item) => item === false)) {
       return;
     } else {
-      setFilteredData();
+      filteredData.current = null;
       const shopDetails = {
         name,
         area,
@@ -200,19 +205,23 @@ function App() {
     if (filteredList && filteredList.length === 0) {
       setZeroResultsFromFilters(true);
     } else {
-      setFilteredData(filteredList);
+      filteredData.current = filteredList;
     }
-
+    console.log(filteredData);
     setActiveFilterWindow(false);
   };
 
   const clearFilters = () => {
-    setZeroResultsFromFilters(false);
-    setFilteredData();
+    rerenderRef.current = true;
+
+    filteredData.current = null;
+    setZeroResultsFromFilters(true);
   };
 
   const deleteShopCallback = () => {
-    rerenderRef.current = true;
+    // rerenderRef.current = true;
+    filteredData.current = null;
+    dispatch(getAllShops());
   };
   function showFilteredOrActual() {
     if (zeroResultsFromFilters && !rerenderRef.current) {
@@ -224,8 +233,9 @@ function App() {
         </div>
       );
     } else {
-      if (filteredData && filteredData.length > 0) {
-        return filteredData.map((item) => {
+      if (filteredData.current && filteredData.current.length > 0) {
+        console.log(filteredData);
+        return filteredData.current.map((item) => {
           return (
             <ShopCard
               data={item}
@@ -235,6 +245,7 @@ function App() {
           );
         });
       } else {
+        console.log('original posts ran');
         return (
           reversedShopData &&
           reversedShopData.map((item) => {
@@ -251,10 +262,10 @@ function App() {
     }
   }
 
-  React.useEffect(() => {
+  /*  React.useEffect(() => {
     rerenderRef.current = false;
     // console.clear();
-  }, []);
+  }, []); */
 
   return (
     <main className='min-h-screen md:overflow-hidden md:h-screen flex justify-center relative '>
