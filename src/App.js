@@ -92,6 +92,7 @@ function App() {
     if (Object.values(errors).some((item) => item === false)) {
       return;
     } else {
+      setDataState((state) => [shopDetails, ...state]);
       const shopDetails = {
         name,
         area,
@@ -110,6 +111,7 @@ function App() {
   };
 
   const applyFilters = () => {
+    console.log('apply filter ran');
     const filterGroup = document.getElementById('filterGroup');
     let selectedFilters = filterGroup.querySelectorAll(
       'input[type="checkbox"]:checked'
@@ -195,6 +197,8 @@ function App() {
     if (filteredList && filteredList.length === 0) {
       console.log('no result found');
       setDataState([]);
+    } else if (!filteredList) {
+      setDataState([]);
     } else {
       setDataState(filteredList);
     }
@@ -212,7 +216,7 @@ function App() {
   };
 
   function showFilteredOrActual() {
-    if (dataState.length === 0) {
+    if (dataState && dataState.length === 0) {
       return (
         <div className='text-gray-500 font-bold'>
           No data found for the selected filters!
