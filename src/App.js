@@ -3,11 +3,7 @@ import logo from './imgs/logo.png';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addShop,
-  getAllShops,
-  shopsDataCount,
-} from './features/shop/shopSlice';
+import { addShop, shopsDataCount } from './features/shop/shopSlice';
 import {
   AREAS,
   BTNCLASS,
@@ -28,11 +24,6 @@ function App() {
   let [errors, setErrors] = React.useState({});
 
   const [activeFilterWindow, setActiveFilterWindow] = React.useState(false);
-  const [zeroResultsFromFilters, setZeroResultsFromFilters] =
-    React.useState(true);
-
-  const filteredData = React.useRef();
-  const rerenderRef = React.useRef(true);
 
   const nameRef = React.useRef('');
   const areaRef = React.useRef('');
@@ -43,6 +34,10 @@ function App() {
 
   let SHOPS_DATA = useSelector(shopsDataCount);
   let reversedShopData = [...SHOPS_DATA].reverse();
+
+  const initialState = React.useRef(reversedShopData);
+
+  const [dataState, setDataState] = React.useState(reversedShopData);
 
   function runValidation() {
     const name = nameRef.current;
@@ -97,7 +92,6 @@ function App() {
     if (Object.values(errors).some((item) => item === false)) {
       return;
     } else {
-      filteredData.current = null;
       const shopDetails = {
         name,
         area,
@@ -116,8 +110,6 @@ function App() {
   };
 
   const applyFilters = () => {
-    setZeroResultsFromFilters(false);
-
     const filterGroup = document.getElementById('filterGroup');
     let selectedFilters = filterGroup.querySelectorAll(
       'input[type="checkbox"]:checked'
@@ -132,7 +124,6 @@ function App() {
     let categoryFilters = [];
     let statusFilters = [];
 
-    // console.log(selectedFilters);
     selectedFilters.forEach((filter) => {
       allLabelsArray.forEach((item) => {
         if (item.htmlFor === filter.id) {
@@ -202,28 +193,26 @@ function App() {
     // console.log(filteredList);
 
     if (filteredList && filteredList.length === 0) {
-      setZeroResultsFromFilters(true);
+      console.log('no result found');
+      setDataState([]);
     } else {
-      filteredData.current = filteredList;
+      setDataState(filteredList);
     }
-    console.log(filteredData);
     setActiveFilterWindow(false);
   };
 
   const clearFilters = () => {
-    rerenderRef.current = true;
-
-    filteredData.current = null;
-    setZeroResultsFromFilters(true);
+    console.log(initialState);
+    setDataState(initialState.current);
   };
 
-  const deleteShopCallback = () => {
-    // rerenderRef.current = true;
-    filteredData.current = null;
-    dispatch(getAllShops());
+  const deleteShopCallback = (id) => {
+    const flushedState = dataState.filter((item) => item._id !== id);
+    setDataState(flushedState);
   };
+
   function showFilteredOrActual() {
-    if (zeroResultsFromFilters && !rerenderRef.current) {
+    if (dataState.length === 0) {
       return (
         <div className='text-gray-500 font-bold'>
           No data found for the selected filters!
@@ -232,9 +221,9 @@ function App() {
         </div>
       );
     } else {
-      if (filteredData.current && filteredData.current.length > 0) {
-        console.log(filteredData);
-        return filteredData.current.map((item) => {
+      return (
+        dataState &&
+        dataState.map((item) => {
           return (
             <ShopCard
               data={item}
@@ -242,29 +231,10 @@ function App() {
               deleteShopCb={deleteShopCallback}
             />
           );
-        });
-      } else {
-        console.log('original posts ran');
-        return (
-          reversedShopData &&
-          reversedShopData.map((item) => {
-            return (
-              <ShopCard
-                data={item}
-                key={item._id}
-                deleteShopCb={deleteShopCallback}
-              />
-            );
-          })
-        );
-      }
+        })
+      );
     }
   }
-
-  /*  React.useEffect(() => {
-    rerenderRef.current = false;
-    // console.clear();
-  }, []); */
 
   return (
     <main className='min-h-screen md:overflow-hidden md:h-screen flex justify-center relative '>
@@ -276,7 +246,6 @@ function App() {
               className='text-2xl cursor-pointer'
               onClick={() => {
                 setActiveFilterWindow(false);
-                rerenderRef.current = true;
               }}
             >
               <AiOutlineCloseCircle />
@@ -316,12 +285,12 @@ function App() {
             <div className='w-full md:w-auto flex flex-col gap-1'>
               <label>By Status:</label>
               <div className='flex gap-1'>
-                <input type='checkbox' id='open' name='open' value='open' />
+                <input type='checkbox' id='open' name='status' value='open' />
                 <label htmlFor='open'>Open</label>
                 <input
                   type='checkbox'
                   id='closed'
-                  name='closed'
+                  name='status'
                   value='closed'
                 />
                 <label htmlFor='closed'>Closed</label>
@@ -356,7 +325,6 @@ function App() {
                 onClick={() => {
                   setErrors({});
                   setConditionalState('shops');
-                  rerenderRef.current = true;
                 }}
               >
                 All Shops
@@ -368,7 +336,6 @@ function App() {
                 onClick={() => {
                   setErrors({});
                   setConditionalState('newshop');
-                  rerenderRef.current = true;
                 }}
               >
                 Add New Shop
@@ -384,7 +351,7 @@ function App() {
                     Filter
                   </button>
                   <button className={FILTERBTN} onClick={clearFilters}>
-                    Clear Filters
+                    Clear Filters & Reset
                   </button>
                 </div>
                 <p className='opacity-40 hidden md:block mt-4 text-xs italic '>

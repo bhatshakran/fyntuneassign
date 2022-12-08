@@ -27,7 +27,7 @@ export const ShopCard = ({ data, deleteShopCb }) => {
 
   const deleteShopFromStore = () => {
     dispatch(deleteShop(_id));
-    deleteShopCb();
+    deleteShopCb(_id);
   };
 
   return (

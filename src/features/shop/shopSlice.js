@@ -95,6 +95,7 @@ export const shopSlice = createSlice({
       localStorage.setItem('shops', JSON.stringify(updatedShops));
 
       state.shops = updatedShops;
+      console.log(state.shops, 'from reducer');
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
