@@ -17,6 +17,8 @@ export const CATEGORIES = [
   'Chemist',
 ];
 
+export const STATUS = ['open', 'closed'];
+
 export const MAINWINDOW =
   'w-full md:w-4/5 md:border border-blue-900 border-opacity-30 md:my-16  rounded-md px-4 md:px-12 md:overflow-hidden md:flex md:gap-16 pb-6';
 export const BTNCLASS = 'bg-blue-900 text-white p-2 rounded-md';

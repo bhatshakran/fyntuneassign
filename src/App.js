@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './imgs/logo.png';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { addShop, shopsDataCount } from './features/shop/shopSlice';
 import {
@@ -15,6 +14,7 @@ import {
   ERRORCLASS,
   CATEGORIES,
   ACTIVEBTN,
+  STATUS,
 } from './app/lib/staticData';
 import { ShopCard, showShopStatus } from './app/components/Shopcard';
 
@@ -289,15 +289,19 @@ function App() {
             <div className='w-full md:w-auto flex flex-col gap-1'>
               <label>By Status:</label>
               <div className='flex gap-1'>
-                <input type='checkbox' id='open' name='status' value='open' />
-                <label htmlFor='open'>Open</label>
-                <input
-                  type='checkbox'
-                  id='closed'
-                  name='status'
-                  value='closed'
-                />
-                <label htmlFor='closed'>Closed</label>
+                {STATUS.map((status, idx) => {
+                  return (
+                    <div className='flex gap-1' key={idx}>
+                      <input
+                        type='checkbox'
+                        id={status}
+                        name='status'
+                        value={status}
+                      />
+                      <label htmlFor={status}>{status}</label>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
